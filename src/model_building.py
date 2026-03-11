@@ -9,7 +9,9 @@ from sklearn.linear_model import LogisticRegression
 from xgboost import XGBClassifier
 
 # Загрузка данных
-df = pd.read_csv('Updated_Paysim_data.csv')
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+df = pd.read_csv(os.path.join(BASE_DIR, 'data', 'processed', 'Updated_Paysim_data.csv'))
 print(df.head(5))
 
 # Разделение данных на признаки и целевую переменную
@@ -105,7 +107,6 @@ shap.summary_plot(shap_values, X_test, plot_type="bar")
 
 # Сохранение модели
 import joblib
-# Создаем словарь "Всё в одном"
 model_package = {
     'model': models['XGBoost'],
     'features': x.columns.tolist(),

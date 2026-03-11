@@ -5,7 +5,9 @@ import seaborn as sns
 pd.set_option('display.max_columns', None)
 
 # Загрузка данных
-data = pd.read_csv('PaySim_data.csv')
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+data = pd.read_csv(os.path.join(BASE_DIR, 'data', 'raw', 'PaySim_data.csv'))
 df = pd.DataFrame(data)
 
 print('Размер датасета:', df.shape)
@@ -51,7 +53,7 @@ plt.show()
 
 # Создание признаков (Feature engineering)
 # Создаю признаки для выявления технических аномалий и для облегчения работы алгоритму
-# step — это часы. Извлекаем час дня (0-23)
+# step — это часы. Извлекаю час дня (0-23)
 df_filtered['hour'] = df_filtered['step'] % 24
 
 # Признак ошибки баланса
@@ -61,7 +63,7 @@ df_filtered['errorBalanceDest'] = df_filtered['oldbalanceDest'] + df_filtered['a
 # Признаки errorBalance были созданы, чтобы сказать модели, если сумма аккаунта с новым балансом(newbalanceOrig)
 # с суммой транзакции(amount) - сумма аккаунта с предыдущим балансом == 0, операция скорее всего является мошеннической
 
-# Удаляю колонки, которые использовал для создания метки ошибок
+# Удаляю колонки, которые использовал для создания новых фич
 df_final = df_filtered.drop(columns=['step', 'oldbalanceOrg',  'newbalanceOrig',  'oldbalanceDest', 'newbalanceDest'])
 
 plt.figure(figsize=(12, 8))
